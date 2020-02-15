@@ -1,0 +1,12 @@
+version: "3.7"
+
+services: 
+    db1:
+        image: couchdb:2.3.1
+        ports: 
+            - "8001:5984"
+    
+    db2:
+        image: couchdb:2.3.1
+        ports: 
+            - "8002:5984"
