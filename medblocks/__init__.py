@@ -1,0 +1,1 @@
+from medblocks import settings
