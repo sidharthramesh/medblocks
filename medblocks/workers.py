@@ -10,8 +10,6 @@ class LogService:
         logging.info("Got it {}".format(payload))
 
 class DatabaseService:
-    # Set up transaction store
-    # Set up iptable
     # 2 way Replications from iptable
     replication_doc = '''{
         "_id": "{id}",
@@ -25,15 +23,31 @@ class DatabaseService:
             }
             }
         }'''
-    pass
+    def dbChanges(self):
+        """Listen on the _changes"""
+        # Changes on data to BlobDataService dataUploader
+        
+        # Listen to activity/_changes to setupReplications if IP address has good ping 
+
+        # Trigger event
+        pass
+    def activityScan(self):
+        """Scan all IP addresses in activity and trigger replication"""
+
+        # Trigger event
+        pass
+
+    def setupReplications(self, ipAddress):
+        """Set up replications"""
+        # Exculde localhost, 127.0.0.1 etc
+        # Check and establish connection
+        # Set up 2 way reaplication for activity and tx databases
+        pass
+
 
 class BlobDataService:
-    # Create public bucket per user
-    # Get encrypted data for all medblocks and store
-    # Sync occasionally
-    pass
-
-class RelayService:
-    # Send new updates to connected servers
-    # Send 
-    pass
+    def dataUploadWorker(self):
+        # Look at attachments in data database
+        # Upload to S3
+        # Make update to document: - detele attachment and set uploaded: true
+        pass

@@ -1,12 +1,20 @@
 from medblocks import scripts, settings
 import logging
 
-def test_connections():
-    if scripts.check_couch_db():
-        logging.info("Successfully got CouchDB instance at {}".format(settings.COUCHDB_URL))
 
-    if scripts.check_rabbit_mq():
-        logging.info("Successfully got AMQP instance at {}".format(settings.AMQP_URL))
 
-test_connections()
+
+
+def test_couch_modify_design_doc():
+    pass
+
+def test_couch_update_tx():
+    pass
+
+def test_pouch_db_replication():
+    # How to do? maybe run a npm test using Karma?
+    pass
+
+
+scripts.test_connections()
 scripts.check_couch_db_init()
