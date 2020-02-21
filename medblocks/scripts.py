@@ -6,6 +6,8 @@ import requests
 import logging
 import socket
 from kombu import Connection
+from minio import Minio
+from minio.error import ResponseError, BucketAlreadyOwnedByYou, BucketAlreadyExists
 
 def check_couch_db():
     for attempt in range(1, 11):
@@ -144,7 +146,26 @@ def check_rabbit_mq():
 
 def check_blob_storage():
     # Init public bucket
-    pass
+    logging.info("Establishing connection to Object Storage")
+    for attempt in range(1, 11):
+        timeout = attempt * 2
+        try:
+            minioClient = Minio(settings.S3_URL,
+                        access_key=settings.S3_ACCESS_KEY,
+                        secret_key=settings.S3_SECRET_KEY,
+                        secure=False)
+        except ConnectionRefusedError:
+            logging.warning(f"Cannot connect to S3 at {settings.S3_URL}. Retrying in {timeout} secs...")
+            time.sleep(timeout)
+    try:
+        logging.info("Creating bucket blob")
+        minioClient.make_bucket("blob")
+    except BucketAlreadyOwnedByYou as err:
+        logging.info("Bucket blob already exists")
+    except BucketAlreadyExists as err:
+        logging.info("Bucket blob already exists")
+    except ResponseError as err:
+        raise
 
 def test_connections():
     logging.info("Establishing connection to CouchDB instance")
@@ -153,7 +174,8 @@ def test_connections():
     logging.info("Establishing connection to AMQP instance")
     if check_rabbit_mq():
         logging.info("Successfully got AMQP instance at {}".format(settings.AMQP_URL))
-
+    if check_blob_storage():
+        logging.info("Successfully got S3 instance at {}".format(settings.S3_URL))
 def check_ip_address() -> (str, str):
     """checks for internal and external ip address"""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

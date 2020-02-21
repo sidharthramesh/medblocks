@@ -27,13 +27,12 @@ services:
             - "5672:5672"
     app:
         build: .
-        ports: 
-            - "8000:8000"
         volumes: 
             - ./:/src/
         depends_on: 
             - rabbitmq
             - db
+            - s3
         environment: 
             PYTHONUNBUFFERED: 0
         command: python -m medblocks.tests
