@@ -80,8 +80,34 @@ def check_couch_db_init():
                 }
             }
             }
+    emailTypeTimeIndex = {
+            "_id": "_design/emailTypeTime",
+            "language": "query",
+            "views": {
+                "emailTypeTime": {
+                "map": {
+                    "fields": {
+                    "email": "asc",
+                    "type": "asc",
+                    "time": "asc"
+                    },
+                    "partial_filter_selector": {}
+                },
+                "reduce": "_count",
+                "options": {
+                    "def": {
+                    "fields": [
+                        "email",
+                        "type",
+                        "time"
+                    ]
+                    }
+                }
+                }
+            }
+            }
     database_documents = {
-        "activity": [read_only_doc],
+        "activity": [read_only_doc, emailTypeTimeIndex],
         "tx": [read_only_doc, hashTypeToIndex],
         "data": []
     }
