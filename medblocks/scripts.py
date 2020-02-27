@@ -1,5 +1,3 @@
-from nameko.runners import ServiceRunner
-from medblocks.workers import DatabaseService, BlobDataService
 from medblocks import settings
 import time
 import requests
@@ -215,11 +213,8 @@ def check_ip_address() -> (str, str):
 def initialize():
     # Do all dependancy checks
     # Set up migrations
-    import eventlet
-    eventlet.monkey_patch()
     logging.info(f"Initializing {settings.VERSION}")
     test_connections()
     logging.info("Initializing CouchDB database and design documents")
     check_couch_db_init()
-    runner = ServiceRunner(config={"AMQP_URI": settings.AMQP_URL})
-    runner.add_service()
+    return True

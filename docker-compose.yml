@@ -31,9 +31,11 @@ services:
             - rabbitmq
             - db
             - s3
+        ports: 
+            - "8000:8000"
         environment: 
             PYTHONUNBUFFERED: 0
-        command: python -m medblocks.tests
+        command: python -m medblocks.run
 
 
 volumes: 
