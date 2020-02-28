@@ -8,8 +8,8 @@ services:
         ports: 
             - "5984:5984"
         environment: 
-            - "COUCHDB_USER=admin"
-            - "COUCHDB_PASSWORD=password"
+            - "COUCHDB_USER=${COUCHDB_USER}"
+            - "COUCHDB_PASSWORD=${COUCHDB_PASSWORD}"
     s3:
         image: minio/minio:RELEASE.2020-02-07T23-28-16Z
         ports: 
@@ -18,8 +18,8 @@ services:
             - s3_data:/data
         command: server /data
         environment: 
-            MINIO_ACCESS_KEY: admin
-            MINIO_SECRET_KEY: password
+            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     
     rabbitmq:
         image: rabbitmq:3.7-alpine

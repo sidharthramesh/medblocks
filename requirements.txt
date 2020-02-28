@@ -1,2 +1,3 @@
 nameko >= 2.12.0
 minio >= 5.0.7
+python-decouple >= 3.3
