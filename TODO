@@ -1,4 +1,6 @@
- - Sync /data to minio
- - Remove attachment and make another commit
- - Create replications from activity logs
-
+- Create replications from activity logs
+- Create front facing config and status html page
+    - Replication list
+    - Status of couchdb, S3
+    - Number of documents stored
+    - Settings

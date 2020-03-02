@@ -4,13 +4,14 @@ eventlet.monkey_patch()
 from medblocks import settings
 from nameko.runners import ServiceRunner
 from medblocks.scripts import initialize
-from medblocks.workers import DatabaseService, HttpServer
+from medblocks.workers import DatabaseService, HttpServer, BlobDataService
 import signal
 if __name__ == "__main__":
     initialize()
     service_runner = ServiceRunner(config={"AMQP_URI": settings.AMQP_URL})
-    service_runner.add_service(DatabaseService)
-    service_runner.add_service(HttpServer)
+    services = [DatabaseService, BlobDataService, HttpServer]
+    for service in services:
+        service_runner.add_service(service)
     service_runner.start()
     def shutdown(signum, frame):
         # signal handlers are run by the MAINLOOP and cannot use eventlet

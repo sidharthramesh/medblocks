@@ -6,7 +6,7 @@ import socket
 from kombu import Connection
 from minio import Minio
 from minio.error import ResponseError, BucketAlreadyOwnedByYou, BucketAlreadyExists
-
+import json
 def check_couch_db():
     for attempt in range(1, 11):
         timeout = attempt * 2
@@ -184,13 +184,41 @@ def check_blob_storage():
     try:
         logging.info("Creating bucket blob")
         minioClient.make_bucket("blob")
+        policy_read_only = {
+        "Version":"2012-10-17",
+        "Statement":[
+            {
+            "Sid":"",
+            "Effect":"Allow",
+            "Principal":{"AWS":"*"},
+            "Action":"s3:GetBucketLocation",
+            "Resource":"arn:aws:s3:::blob"
+            },
+            {
+            "Sid":"",
+            "Effect":"Allow",
+            "Principal":{"AWS":"*"},
+            "Action":"s3:ListBucket",
+            "Resource":"arn:aws:s3:::blob"
+            },
+            {
+            "Sid":"",
+            "Effect":"Allow",
+            "Principal":{"AWS":"*"},
+            "Action":"s3:GetObject",
+            "Resource":"arn:aws:s3:::blob/*"
+            }
+        ]
+        }
+        logging.info("Setting bucket policy as public")
+        minioClient.set_bucket_policy("blob", json.dumps(policy_read_only))
     except BucketAlreadyOwnedByYou as err:
         logging.info("Bucket blob already exists")
     except BucketAlreadyExists as err:
         logging.info("Bucket blob already exists")
     except ResponseError as err:
-        raise
-
+        raise err
+    
 def test_connections():
     logging.info("Establishing connection to CouchDB instance")
     if check_couch_db():
