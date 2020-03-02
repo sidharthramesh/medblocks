@@ -13,11 +13,12 @@ class HttpServer:
     @http("GET", "/")
     def version(self, request):
         return json.dumps({"version": settings.VERSION})
-
-class DatabaseService:
-    # 2 way Replications from iptable
-    name = "sync_service"
-    replication_doc = '''{
+    @http("GET", "/replication")
+    def get_replications(self, requests):
+        pass
+    @http("POST", "/replication")
+    def setup_replication(self, request):
+        replication_doc = '''{
         "_id": "{id}",
         "source": "{source}",
         "target": "{target}",
@@ -29,6 +30,12 @@ class DatabaseService:
             }
             }
         }'''
+
+        pass
+class DatabaseService:
+    # 2 way Replications from iptable
+    name = "sync_service"
+    
     blob_data_service = RpcProxy("blob_data_service")
     @timer(interval=1)
     def dataChanges(self):
