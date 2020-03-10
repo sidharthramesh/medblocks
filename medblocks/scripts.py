@@ -54,15 +54,16 @@ def check_couch_db_init():
                 }
             }
             }
-    toTypeIndex = {
-            "_id": "_design/toTypeIndex",
+    toTypeTagIndex = {
+            "_id": "_design/toTypeTagIndex",
             "language": "query",
             "views": {
                 "toType": {
                 "map": {
                     "fields": {
                     "to": "asc",
-                    "type": "asc"
+                    "type": "asc",
+                    "tag": "asc"
                     },
                     "partial_filter_selector": {}
                 },
@@ -71,7 +72,8 @@ def check_couch_db_init():
                     "def": {
                     "fields": [
                         "to",
-                        "type"
+                        "type",
+                        "tag"
                     ]
                     }
                 }
@@ -106,7 +108,7 @@ def check_couch_db_init():
             }
     database_documents = {
         "activity": [read_only_doc, emailTypeTimeIndex],
-        "tx": [read_only_doc, hashTypeToIndex],
+        "tx": [read_only_doc, hashTypeToIndex, toTypeTagIndex],
         "data": []
     }
     cors = {
